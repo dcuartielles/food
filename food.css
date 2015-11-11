@@ -1,0 +1,76 @@
+body {
+    background-color: lightgrey;
+	font-family: "Times News Roman", "monospace", Serif;
+	font-size: 0.8em;
+}
+.column {
+	width:200px;
+	float:left;
+	background-color: white;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	margin: 5px;
+	padding: 5px;
+}
+.dishType {
+	font-weight:bold;
+	margin-top: 10px;
+}
+#tableContainer {
+	width:100%;
+}
+.day {
+	font-weight: bold;
+}
+.dishDesc {
+}
+.dishPrice {
+	background-color: lightgrey;
+	width: 40px;
+	float: right;
+}
+.dishPriceLine {
+	background-color: lightgrey;
+	width: 100%;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	/*float: left;*/
+}
+.restaurantName {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+.restaurantContainer {
+}
+.dayContainer {
+	margin-top: 10px;
+}
+.priceContainer {
+	background-color: lightgrey;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding:2px;
+}
+.priceList {
+	width:100%;
+}
+.priceListTitle {
+	font-weight: bold;
+	width:100%;
+}
+.priceType {
+	color: darkred;
+	width: 150px;
+	float: left;
+}
+.space {
+}
+.times {
+	background-color: lightgrey;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding:2px
+}
