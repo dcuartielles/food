@@ -716,6 +716,78 @@ function printOut_sture($weekday = -1, $cli = true){
 	}
 }
 
+//My functions, parsing Mamlö Opera
+
+function scraping_opera() {
+    // create HTML DOM
+    $html = file_get_html('http://www.malmoopera.se/mat-och-dryck/lunchmeny');
+	// get prices
+    $item['times'] = $html->find('div[class="ds-1col node node-mo-page view-mode-full page__content clearfix"]',0)->find('p',4)->plaintext;
+    $item['prices'] = " ";
+    
+	
+    // get Mon-Fri 
+	for ($x = 5; $x <= 9; $x++) {
+		//$item['day'] = $html->find('div[class="ds-1col node node-mo-page view-mode-full page__content clearfix"]',0)->find('p', $x)->find('strong', 0)->innertext;
+		$item['menu'] = $html->find('div[class="ds-1col node node-mo-page view-mode-full page__content clearfix"]',0)->find('p', $x)->innertext;
+		$ret[] = $item;
+    }
+    
+    // clean up memory
+    $html->clear();
+    unset($html);
+
+    return $ret;
+}
+
+//Lars S function, printing malmö opera
+
+function printOut_opera($weekday = -1, $cli = true) {
+	$ret = scraping_opera();
+
+	// show results on cli
+	$countDays = 0;
+	if ($cli) {
+		echo "OPERA\n";
+		echo "*********\n";
+		foreach($ret as $v) {
+			if($countDays >= 0 && $countDays < 5  && $weekday == -1 || $weekday == $countDays) {
+				echo $v['times']."\n";
+				echo $v['prices']."\n";
+				echo "\n----------------------\n";
+			}
+			if($countDays >= 0 && $countDays < 5  && $weekday == -1 || $weekday == $countDays) {
+				echo $v['day']."\n----------------------\n";
+				echo $v['menu'];
+				echo "\n----------------------\n";
+			}
+			if($countDays == 6) {
+				// nothing to do in this case
+			}
+			$countDays++;
+		}
+	} else {
+		echo "<div class='restaurantContainer'>";
+		echo "<div class='restaurantName'>MALMÖ OPERA</div>";
+		foreach($ret as $v) {
+			if($countDays == 0) {
+				echo "<div class='priceContainer'><div class='priceListTitle'>Prices</div>";
+				echo "<div class='times'>".$v['times']."</div>";
+				echo "<div class='dishPriceLine'>".$v['prices']."</div>";
+				echo "</div>";
+			}
+			echo "<div class='dayContainer'>";			
+			if($countDays >= 0 && $countDays < 5  && $weekday == -1 || $weekday == $countDays) {
+				echo "<div class='dishDesc'>".$v['day']."</div>";
+				echo "<div class='dishDesc'>".$v['menu']."</div>";
+			}
+			echo "</div>";
+			$countDays++;
+		}
+		echo "</div>";
+	}
+}
+
 function printOut_noWork($cli = true) {
 	
 	if ($cli) {
@@ -771,6 +843,8 @@ if ($dayOfWeek > 4 || $dayOfWeek < 0) {
 	printOut_thapthim($dayOfWeek, false);
 	echo "</div><div class='column'>";
 	printOut_sture($dayOfWeek, false
+	echo "</div><div class='column'>";
+	printOut_opera($dayOfWeek, false);
 }
 
 echo "</div></div>";
