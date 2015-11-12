@@ -770,7 +770,7 @@ if ($dayOfWeek > 4 || $dayOfWeek < 0) {
 	echo "</div><div class='column'>";
 	printOut_thapthim($dayOfWeek, false);
 	echo "</div><div class='column'>";
-	printOut_sture($dayOfWeek, false
+	printOut_sture($dayOfWeek, false;
 }
 
 echo "</div></div>";
