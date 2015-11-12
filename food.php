@@ -606,6 +606,125 @@ function printOut_thapthim($weekday = -1, $cli = true) {
 	}
 }
 
+function scraping_sture2(){
+	
+	    // create HTML DOM
+    $html = file_get_html('http://www.sture.me/extra/lunchmeny');
+	// get prices
+    $item['times'] = $html->find('div[class="container"]',0)->find('b', 2)->plaintext;
+	$item['times2'] = $html->find('div[class="container"]',0)->find('b', 3)->plaintext;
+    $item['prices'] = "";
+    
+	//Get menu
+	$menutext = str_replace( '<', ' <', $html->find('div[class="container"]',0)); //add spaces before all html-tags
+	$menutext = str_replace( '&nbsp;', ' ', $menutext); //replace non-breaking space with normal space
+    $menutext = strip_tags($menutext); //Remove all html-tags
+	$words = preg_split('/\s+/', $menutext); //Split string into array, using space as a splitter
+	$days = [
+		"Monday" => "",
+		"Tuesday" => "",
+		"Wednesday" => "",
+		"Thursday" => "",
+		"Friday" => "",
+	]; 
+	$activeDay = "none";
+	foreach($words as $word) {
+		
+		//Find where a days menu start
+		switch ($word) {
+			case "Måndag:":
+				$activeDay = "Monday";
+			break;
+			
+			case "Tisdag:": 
+				$activeDay = "Tuesday";
+			break;
+			
+			case "Onsdag:": 
+				$activeDay = "Wednesday";
+			break;
+			
+			case "Torsdag:": 
+				$activeDay = "Thursday";
+			break;
+			
+			case "Fredag:": 
+				$activeDay = "Friday";
+			break;
+			
+			case "Kaffe":
+				$activeDay = "none";
+			break;
+		}
+		//Get all the words from that days menu
+		if($activeDay != "none"){
+			$days[$activeDay] .=  $word . " ";
+		}
+	}
+	
+	//Enter each day and menu into $ret
+	foreach($days as $day) {
+		$item["day"] = strtok($day, " ");
+		$item["menu"] = substr(strstr($day," "), 1);
+		$ret[] = $item;
+	}	
+	
+    // clean up memory
+    $html->clear();
+    unset($html);
+
+    return $ret;
+}
+
+function printOut_sture2($weekday = -1, $cli = false){
+	
+	$ret = scraping_sture2();
+
+	// show results on cli
+	$countDays = 0;
+	if ($cli) {
+		echo "STURE\n";
+		echo "*********\n";
+		foreach($ret as $v) {
+			if($countDays == 0) {
+				echo $v['times']."\n";
+				echo $v['times2']."\n";
+				echo $v['prices']."\n";
+				echo "\n----------------------\n";
+			}
+			if($countDays >= 0 && $countDays < 5  && $weekday == -1 || $weekday == $countDays) {
+				echo $v['day']."\n----------------------\n";
+				echo $v['menu'];
+				echo "\n----------------------\n";
+			}
+			if($countDays == 6) {
+				// nothing to do in this case
+			}
+			$countDays++;
+		}
+	} else {
+		echo "<div class='restaurantContainer'>";
+		echo "<div class='restaurantName'>STURE</div>";
+		foreach($ret as $v) {
+			if($countDays == 0) {
+				echo "<div class='priceContainer'><div class='priceListTitle'>Prices</div>";
+				echo "<div class='times'>".$v['times']."</div>";
+				echo "<div class='times2'>".$v['times2']."</div>";
+				echo "<div class='dishPriceLine'>".$v['prices']."</div>";
+				echo "</div>";
+			}
+			echo "<div class='dayContainer'>";			
+			if($countDays >= 0 && $countDays < 5  && $weekday == -1 || $weekday == $countDays) {
+				echo "<div class='dishDesc'>".$v['day']."</div>";
+				echo "<div class='dishDesc'>".$v['menu']."</div>";
+			}
+			echo "</div>";
+			$countDays++;
+		}
+		echo "</div>";
+	}
+}
+
 function printOut_noWork($cli = true) {
 	
 	if ($cli) {
@@ -659,6 +778,8 @@ if ($dayOfWeek > 4 || $dayOfWeek < 0) {
 	printOut_valfarden($dayOfWeek, false);
 	echo "</div><div class='column'>";
 	printOut_thapthim($dayOfWeek, false);
+	echo "</div><div class='column'>";
+	printOut_sture2($dayOfWeek, false);
 }
 
 echo "</div></div>";
