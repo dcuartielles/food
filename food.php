@@ -1,6 +1,12 @@
 <?php
 include_once('simple_html_dom.php');
 
+// include all of the utils in the corresponding folder
+foreach (glob("utils/*.php") as $filename)
+{
+    include $filename;
+}
+
 // include all of the restaurants in the corresponding folder
 foreach (glob("restaurants/*.php") as $filename)
 {
@@ -51,7 +57,7 @@ echo "<div id='tableContainer'><div class='column'>";
 if ($dayOfWeek > 4 || $dayOfWeek < 0) {
 	printOut_noWork(false);
 } else {
-/*
+
 	printOut_miamarias($dayOfWeek, false);
 	echo "</div><div class='column'>";
 	printOut_meck($dayOfWeek, false);
@@ -76,7 +82,7 @@ if ($dayOfWeek > 4 || $dayOfWeek < 0) {
   echo "</div><div class='column'>";
   printOut_malmoopera($dayOfWeek, false);
   echo "</div><div class='column'>";
-  printOut_redfellas($dayOfWeek, false);
+/*  printOut_redfellas($dayOfWeek, false);
   echo "</div><div class='column'>";
   printOut_rootz($dayOfWeek, false);
   echo "</div><div class='column'>";
